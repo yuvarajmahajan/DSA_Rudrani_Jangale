@@ -1,0 +1,750 @@
+﻿Oop 1 implement complex numbers operations 
+
+
+#include <iostream>
+using namespace std;
+
+
+class Complex {
+    double real;
+    double img;
+
+
+public:
+    Complex(); // Default Constructor
+    friend istream &operator>>(istream &, Complex &); // Input
+    friend ostream &operator<<(ostream &, const Complex &); // Output
+    Complex operator+(Complex); // Addition
+    Complex operator*(Complex); // Multiplication
+};
+
+
+Complex::Complex() {
+    real = 0;
+    img = 0;
+}
+
+
+istream &operator>>(istream &in, Complex &c) {
+    in >> c.real >> c.img;
+    return in;
+}
+
+
+ostream &operator<<(ostream &out, const Complex &c) {
+    out << c.real << " + " << c.img << "i" << endl;
+    return out;
+}
+
+
+Complex Complex::operator+(Complex c1) {
+    Complex temp;
+    temp.real = real + c1.real;
+    temp.img = img + c1.img;
+    return temp;
+}
+
+
+Complex Complex::operator*(Complex c2) {
+    Complex tmp;
+    tmp.real = real * c2.real - img * c2.img;
+    tmp.img = real * c2.img + img * c2.real;
+    return tmp;
+}
+
+
+int main() {
+    Complex C1, C2, C3, C4;
+    int flag = 1;
+    char b;
+    while (flag == 1) {
+        cout << "Enter Real and Imaginary part of Complex Number 1: \n";
+        cin >> C1;
+        cout << "Enter Real and Imaginary part of Complex Number 2: \n";
+        cin >> C2;
+        int f = 1;
+        while (f == 1) {
+            cout << "Complex Number 1: " << C1 << endl;
+            cout << "Complex Number 2: " << C2 << endl;
+            cout << "**********MENU**********" << endl;
+            cout << "1. Addition of Complex Numbers" << endl;
+            cout << "2. Multiplication of Complex Numbers" << endl;
+            cout << "3. Exit\n";
+            int a;
+            cout << "Enter your choice from the above MENU (1 to 3): ";
+            cin >> a;
+            if (a == 1) {
+                C3 = C1 + C2;
+                cout << "Addition: " << C3 << endl;
+                cout << "Do you want to perform another operation (y/n): \n";
+                cin >> b;
+                if (b == 'y' || b == 'Y') {
+                    f = 1;
+                } else {
+                    cout << "Thanks for using this program!!\n";
+                    flag = 0;
+                    f = 0;
+                }
+            } else if (a == 2) {
+                C4 = C1 * C2;
+                cout << "Multiplication: " << C4 << endl;
+                cout << "Do you want to perform another operation (y/n): \n";
+                cin >> b;
+                if (b == 'y' || b == 'Y') {
+                    f = 1;
+                } else {
+                    cout << "Thanks for using this program!!\n";
+                    flag = 0;
+                    f = 0;
+                }
+            } else {
+                cout << "Thanks for using this program!!\n";
+                flag = 0;
+                f = 0;
+            }
+        }
+    }
+    return 0;
+}
+
+
+Oop 2 create a database of students information system 
+
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+
+class StudData;
+
+
+class Student {
+    string name;
+    int roll_no;
+    string cls;
+    string division; // changed from char* to string
+    string dob;
+    string bloodgroup; // changed from char* to string
+    static int count;
+
+
+public:
+    Student() // Default Constructor
+        : roll_no(0), division(""), dob("dd/mm/yyyy"), bloodgroup("") {}
+
+
+    ~Student() {}
+
+
+    static int getCount() {
+        return count;
+    }
+
+
+    void getData(StudData*);
+    void dispData(StudData*);
+};
+
+
+class StudData {
+    string caddress;
+    long telno;
+    long dlno;
+    friend class Student;
+
+
+public:
+    StudData() : telno(0), dlno(0) {}
+
+
+    ~StudData() {}
+
+
+    void getStudData() {
+        cout << "Enter Contact Address : ";
+        cin.get();
+        getline(cin, caddress);
+        cout << "Enter Telephone Number : ";
+        cin >> telno;
+        cout << "Enter Driving License Number : ";
+        cin >> dlno;
+    }
+
+
+    void dispStudData() {
+        cout << "Contact Address : " << caddress << endl;
+        cout << "Telephone Number : " << telno << endl;
+        cout << "Driving License Number : " << dlno << endl;
+    }
+};
+
+
+int Student::count = 0;
+
+
+inline void Student::getData(StudData* st) {
+    cout << "Enter Student Name : ";
+    getline(cin, name);
+    cout << "Enter Roll Number : ";
+    cin >> roll_no;
+    cout << "Enter Class : ";
+    cin.get();
+    getline(cin, cls);
+    cout << "Enter Division : ";
+    cin >> division;
+    cout << "Enter Date of Birth : ";
+    cin.get();
+    getline(cin, dob);
+    cout << "Enter Blood Group : ";
+    cin >> bloodgroup;
+    st->getStudData();
+    count++;
+}
+
+
+inline void Student::dispData(StudData* st1) {
+    cout << "Student Name : " << name << endl;
+    cout << "Roll Number : " << roll_no << endl;
+    cout << "Class : " << cls << endl;
+    cout << "Division : " << division << endl;
+    cout << "Date of Birth : " << dob << endl;
+    cout << "Blood Group : " << bloodgroup << endl;
+    st1->dispStudData();
+}
+
+
+int main() {
+    Student* stud1[100];
+    StudData* stud2[100];
+    int n = 0;
+    char ch;
+
+
+    do {
+        stud1[n] = new Student;
+        stud2[n] = new StudData;
+        stud1[n]->getData(stud2[n]);
+        n++;
+        cout << "Do you want to add another student (y/n) : ";
+        cin >> ch;
+        cin.get();
+    } while (ch == 'y' || ch == 'Y');
+
+
+    for (int i = 0; i < n; i++) {
+        cout << "---------------------------------------------------------------" << endl;
+        stud1[i]->dispData(stud2[i]);
+    }
+
+
+    cout << "---------------------------------------------------------------" << endl;
+    cout << "Total Students : " << Student::getCount();
+    cout << endl << "---------------------------------------------------------------" << endl;
+
+
+    for (int i = 0; i < n; i++) {
+        delete stud1[i];
+        delete stud2[i];
+    }
+
+
+    return 0;
+}
+
+
+Oop 3 inheritance and exception handling
+
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+
+class publication {
+private:
+    string title;
+    float price;
+
+
+public:
+    void add() {
+        cout << "**Enter the Publication information** " << endl;
+        cout << "Enter Title of the Publication : ";
+        cin >> title;
+        cout << "Enter Price of Publication : ";
+        cin >> price;
+    }
+
+
+    void display() {
+        cout << "\n--------------------------------------------------";
+        cout << "\nTitle of Publication : " << title;
+        cout << "\nPublication Price : " << price;
+    }
+};
+
+
+class book : public publication {
+private:
+    int page_count;
+
+
+public:
+    void add_book() {
+        try {
+            add();
+            cout << "Enter Page Count of Book : ";
+            cin >> page_count;
+            if (page_count <= 0) {
+                throw page_count;
+            }
+        } catch (...) {
+            cout << "\nInvalid Page Count!!!";
+            page_count = 0;
+        }
+    }
+
+
+    void display_book() {
+        display();
+        cout << "\nPage Count : " << page_count;
+        cout << "\n--------------------------------------------------\n";
+    }
+};
+
+
+class tape : public publication {
+private:
+    float play_time;
+
+
+public:
+    void add_tape() {
+        try {
+            add();
+            cout << "Enter Play Duration of the Tape : ";
+            cin >> play_time;
+            if (play_time <= 0)
+                throw play_time;
+        } catch (...) {
+            cout << "\nInvalid Play Time!!!";
+            play_time = 0;
+        }
+    }
+
+
+    void display_tape() {
+        display();
+        cout << "\nPlay Time : " << play_time << " min";
+        cout << "\n--------------------------------------------------\n";
+    }
+};
+
+
+int main() {
+    book b1[10];
+    tape t1[10];
+    int b_count = 0, t_count = 0;
+
+
+    cout << "Enter number of books:";
+    cin >> b_count;
+    cout << "\nAdd Information to Books" << endl;
+    for (int i = 0; i < b_count; i++) {
+        b1[i].add_book();
+    }
+
+
+    cout << "Enter number of Tapes:";
+    cin >> t_count;
+    cout << "Add Information to Tapes" << endl;
+    for (int i = 0; i < t_count; i++) {
+        t1[i].add_tape();
+    }
+
+
+    cout << "**Display Books Information**" << endl;
+    for (int i = 0; i < b_count; i++) {
+        b1[i].display_book();
+    }
+
+
+    cout << "**Display Tapes Information**";
+    for (int i = 0; i < t_count; i++) { // Corrected from b_count to t_count
+        t1[i].display_tape();
+    }
+
+
+    return 0;
+}
+
+
+Oop 4 implement file handling operations
+
+
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+#include <string>
+
+
+using namespace std;
+
+
+class File {
+private:
+    string name;
+    int salary;
+
+
+public:
+    void writefile();
+    void readfile();
+};
+
+
+void File::writefile() {
+    ofstream out("Data.txt", ios::out | ios::app); // Use ios::app for append mode
+    if (!out) {
+        cerr << "Error opening file for writing." << endl;
+        return;
+    }
+
+
+    out << left << setw(20) << "Employee Name" << setw(15) << "Employee Salary" << endl;
+
+
+    for (int i = 0; i < 5; i++) {
+        cout << "Enter name of employee: -";
+        cin >> name;
+        cout << "Enter salary of employee: -";
+        cin >> salary;
+        out << left << setw(20) << name << setw(15) << salary << endl;
+    }
+
+
+    out.close();
+}
+
+
+void File::readfile() {
+    ifstream in("Data.txt", ios::in);
+    if (!in) {
+        cerr << "Error opening file for reading." << endl;
+        return;
+    }
+
+
+    cout << "-------- Data From the file ------ " << endl;
+
+
+    cout << left << setw(20) << "Employee Name" << setw(15) << "Employee Salary" << endl;
+
+
+    for (string line; getline(in, line);) {
+        cout << line << endl;
+    }
+
+
+    in.close();
+}
+
+
+int main() {
+    File f1;
+
+
+    f1.writefile();
+
+
+    f1.readfile();
+
+
+    return 0;
+}
+
+
+Oop 5 function template for selection sort that input output sort 
+
+
+#include <iostream>
+using namespace std;
+
+#define size 10
+
+template<class T>
+void sel(T A[size], int n) {
+    int i, j, min;
+    T temp;
+    for (i = 0; i < n - 1; i++) {
+        min = i;
+        for (j = i + 1; j < n; j++) {
+            if (A[j] < A[min])
+                min = j;
+        }
+        temp = A[i];
+        A[i] = A[min];
+        A[min] = temp;
+    }
+    cout << "\nSorted array: ";
+    for (i = 0; i < n; i++) {
+        cout << " " << A[i];
+    }
+}
+
+int main() {
+    int choice, n;
+    int A[size];
+    float B[size];
+    int i;
+
+    cout << "-----------------------" << endl;
+    do {
+        cout << "\n 1. Integer\n 2. Float\n 3. Exit" << endl;
+        cout << "\nEnter Choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1: {
+                cout << "\nEnter Total Number Of Integer Elements: ";
+                cin >> n;
+                if (n > size || n <= 0) {
+                    cout << "Invalid size. Please enter a number between 1 and " << size << endl;
+                    break;
+                }
+                cout << "\nEnter Integer Elements: ";
+                for (i = 0; i < n; i++) {
+                    cin >> A[i];
+                }
+                sel(A, n);
+                break;
+            }
+            case 2: {
+                cout << "\nEnter Total Number Of Float Elements: ";
+                cin >> n;
+                if (n > size || n <= 0) {
+                    cout << "Invalid size. Please enter a number between 1 and " << size << endl;
+                    break;
+                }
+                cout << "\nEnter Float Elements: ";
+                for (i = 0; i < n; i++) {
+                    cin >> B[i];
+                }
+                sel(B, n);
+                break;
+            }
+            case 3: {
+                cout << "********** Program Exited Successfully **********" << endl;
+                return 0; // Using return to exit from main function
+            }
+            default: {
+                cout << "\nInvalid choice. Please try again." << endl;
+                break;
+            }
+        }
+    } while (choice != 3);
+
+    return 0;
+}
+
+Step 6 STL for sorting and searching
+
+
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <iterator>
+using namespace std;
+
+
+class Item {
+public:
+    char name[10];
+    int quantity;
+    int cost;
+    int code;
+
+
+    bool operator==(const Item& i1) {
+        return (code == i1.code);
+    }
+
+
+    bool operator<(const Item& i1) {
+        return (code < i1.code);
+    }
+};
+
+
+vector<Item> o1;
+
+
+void print(const Item& i1);
+void display();
+void insert();
+void search();
+void sortItems();
+void removeItem();
+
+
+int main() {
+    int ch;
+    do {
+        cout << "\n*** Menu ***";
+        cout << "\n1. Insert";
+        cout << "\n2. Display";
+        cout << "\n3. Search";
+        cout << "\n4. Sort";
+        cout << "\n5. Delete";
+        cout << "\n6. Exit";
+        cout << "\nEnter your choice: ";
+        cin >> ch;
+
+
+        switch(ch) {
+            case 1:
+                insert();
+                break;
+
+
+            case 2:
+                display();
+                break;
+
+
+            case 3:
+                search();
+                break;
+
+
+            case 4:
+                sortItems();
+                cout << "\n\nSorted on Code";
+                display();
+                break;
+
+
+            case 5:
+                removeItem();
+                break;
+
+
+            case 6:
+                cout << "Exiting the program." << endl;
+                exit(0);
+        }
+    } while (ch != 6);
+
+
+    return 0;
+}
+
+
+void insert() {
+    Item i1;
+    cout << "\nEnter Item Name: ";
+    cin >> i1.name;
+    cout << "Enter Item Quantity: ";
+    cin >> i1.quantity;
+    cout << "Enter Item Cost: ";
+    cin >> i1.cost;
+    cout << "Enter Item Code: ";
+    cin >> i1.code;
+    o1.push_back(i1);
+}
+
+
+void display() {
+    for_each(o1.begin(), o1.end(), print);
+}
+
+
+void print(const Item& i1) {
+    cout << "\n";
+    cout << "\nItem Name: " << i1.name;
+    cout << "\nItem Quantity: " << i1.quantity;
+    cout << "\nItem Cost: " << i1.cost;
+    cout << "\nItem Code: " << i1.code;
+}
+
+
+void search() {
+    Item i1;
+    cout << "\nEnter Item Code to search: ";
+    cin >> i1.code;
+    auto p = find(o1.begin(), o1.end(), i1);
+
+
+    if (p != o1.end()) {
+        cout << "\nFound." << endl;
+        cout << "Item Name: " << p->name << endl;
+        cout << "Item Quantity: " << p->quantity << endl;
+        cout << "Item Cost: " << p->cost << endl;
+        cout << "Item Code: " << p->code << endl;
+    } else {
+        cout << "\nNot found." << endl;
+    }
+}
+
+
+void sortItems() {
+    sort(o1.begin(), o1.end());
+}
+
+
+void removeItem() {
+    Item i1;
+    cout << "\nEnter Item Code to delete: ";
+    cin >> i1.code;
+    auto p = find(o1.begin(), o1.end(), i1);
+
+
+    if (p != o1.end()) {
+        o1.erase(p);
+        cout << "\nItem with code " << i1.code << " deleted successfully." << endl;
+    } else {
+        cout << "\nItem not found." << endl;
+    }
+}
+
+
+
+
+Oop 7 map associative container
+
+
+#include <iostream>
+#include <map>
+#include <string>
+using namespace std;
+
+int main() {
+    typedef map<string, int> mapType;
+    mapType populationMap;
+
+    populationMap.insert({"Maharashtra", 7026357});
+    populationMap.insert({"Rajasthan", 6578936});
+    populationMap.insert({"Karnataka", 6678993});
+    populationMap.insert({"Punjab", 5789032});
+    populationMap.insert({"West Bengal", 6676291});
+
+    mapType::iterator iter;
+
+    cout << "======== Population of states in India ==========\n";
+    cout << "Size of populationMap: " << populationMap.size() << "\n";
+
+    string state_name;
+    cout << "\nEnter name of the state: ";
+    cin >> state_name;
+
+    iter = populationMap.find(state_name);
+
+    if (iter != populationMap.end()) {
+        cout << state_name << "'s population is " << iter->second << "\n";
+    } else {
+        cout << "State not found in populationMap" << "\n";
+    }
+
+    return 0;
+}
